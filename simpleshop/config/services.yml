@@ -1,0 +1,31 @@
+imports:
+    - { resource: tables.yml }
+
+services:
+    kaerol.simpleshop.order_an_item:
+        class: kaerol\simpleshop\controller\order_an_item
+        arguments:
+            - '@service_container'
+            - '@auth'
+            - '@config'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@notification_manager'
+            - '@request'
+            - '@user'
+
+    kaerol.simpleshop.posting_listener:
+        class: kaerol\simpleshop\event\posting_listener
+        arguments:
+            - '@service_container'
+            - '@auth'
+            - '@config'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@dispatcher'
+            - '@notification_manager'
+            - '@request'
+            - '@template'
+            - '@user'
+        tags:
+            - { name: event.listener }		

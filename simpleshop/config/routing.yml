@@ -1,0 +1,5 @@
+kaerol_simpleshop_order_an_item_controller:
+    path: /order_an_item/{post_id}/{sale_id}
+    defaults: { _controller: kaerol.simpleshop.order_an_item:add }
+    requirements:
+        sale_id: \d+
