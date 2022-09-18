@@ -13,6 +13,20 @@ services:
             - '@notification_manager'
             - '@request'
             - '@user'
+            - '@language'
+
+    kaerol.simpleshop.sale_report:
+        class: kaerol\simpleshop\controller\sale_report
+        arguments:
+            - '@service_container'
+            - '@auth'
+            - '@config'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@notification_manager'
+            - '@request'
+            - '@user'
+            - '@language'
 
     kaerol.simpleshop.posting_listener:
         class: kaerol\simpleshop\event\posting_listener
@@ -27,5 +41,6 @@ services:
             - '@request'
             - '@template'
             - '@user'
+            - '@language'
         tags:
             - { name: event.listener }		

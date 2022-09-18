@@ -21,7 +21,7 @@ class v_0_1_0 extends \phpbb\db\migration\migration
 				$this->table_prefix . 'simpleshop_sale_offer'	=> array(
 					'COLUMNS'				=> array(
 						'id'				=> array('UINT', null, 'auto_increment'),
-						'post_id'			=> array('UINT', 0),
+						'topic_id'			=> array('UINT', 0),
 						'title'				=> array('VCHAR:255', ''),
 						'end_date'			=> array('VCHAR:10', ''),
 					),
@@ -38,10 +38,11 @@ class v_0_1_0 extends \phpbb\db\migration\migration
 				$this->table_prefix . 'simpleshop_sale_offer_item_order'	=> array(
 					'COLUMNS'				=> array(
 						'id'				=> array('UINT', null, 'auto_increment'),
-						'sale_offer_item_id'=> array('UINT', 0),
-						'post_id'			=> array('UINT', 0),
+						'topic_id'			=> array('UINT', 0),
 						'user_id'			=> array('UINT', 0),
-						'number'			=> array('UINT', 0),
+						'sale_offer_id'		=> array('UINT', 0),
+						'sale_offer_item_id'=> array('UINT', 0),
+						'count'				=> array('UINT', 0),
 					),
 					'PRIMARY_KEY'	=> 'id',
 				),

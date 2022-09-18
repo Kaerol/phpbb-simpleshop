@@ -1,5 +1,17 @@
 kaerol_simpleshop_order_an_item_controller:
-    path: /order_an_item/{post_id}/{sale_id}
+    path: /order_an_item/{topic_id}/{sale_id}
     defaults: { _controller: kaerol.simpleshop.order_an_item:add }
+    requirements:
+        sale_id: \d+
+
+kaerol_simpleshop_sale_items_report_controller:
+    path: /sale_items_report/{topic_id}/{sale_id}
+    defaults: { _controller: kaerol.simpleshop.sale_report:items_report }
+    requirements:
+        sale_id: \d+
+
+kaerol_simpleshop_sale_person_report_controller:
+    path: /sale_person_report/{topic_id}/{sale_id}
+    defaults: { _controller: kaerol.simpleshop.sale_report:person_report }
     requirements:
         sale_id: \d+

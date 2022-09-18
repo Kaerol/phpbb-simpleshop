@@ -43,4 +43,13 @@ $lang = array_merge($lang, array(
 	'KAEROL_SIMPLESHOP_ORDER'							=> 'WYŚLIJ ZAMÓWIENIE',
 	'KAEROL_SIMPLESHOP_INFO'							=> 'INFORMACJA!',
 	'KAEROL_SIMPLESHOP_WARNING'							=> 'UWAGA!',
+	'KAEROL_SIMPLESHOP_ITEMS_REPORT'					=> 'Zobacz raport przedmiotów',
+	'KAEROL_SIMPLESHOP_PERSON_REPORT'					=> 'Zobacz raport użytkowników',
+	'KAEROL_SIMPLESHOP_ITEMS_REPORT_TITLE'				=> 'Raport przedmiotów',
+	'KAEROL_SIMPLESHOP_PERSON_REPORT_TITLE'				=> 'Raport użytkowników',
+	'KAEROL_SIMPLESHOP_REPORT_USERNAME_HEADER'			=> 'Nazwa użytkownika',
+	'KAEROL_SIMPLESHOP_REPORT_NAME_HEADER'				=> 'Nazwa przedmiotu',
+	'KAEROL_SIMPLESHOP_REPORT_COUNT_HEADER'				=> 'Ilość',
+	'KAEROL_SIMPLESHOP_ORDER_ALL_LABEL'					=> 'Zamówione %s',
+	'KAEROL_SIMPLESHOP_ORDER_USER_LABEL'				=> '( w tym Twoje %s)',
 ));

@@ -92,16 +92,16 @@ class posting_listener implements EventSubscriberInterface
 	
 	public function posting_modify_template_vars($event)
 	{	
-		//print_r($event['post_id']);		
-		$post_id = $event['post_id'];
+		//print_r($event['topic_id']);		
+		$topic_id = $event['topic_id'];
 		$template_data = $event['page_data'];
 		$template_data['S_SHOW_SIMPLESHOP_PANEL_BOX'] = true;
 		$event['page_data'] = $template_data;
 		
-		$sale_offer_id = $this->_getShopOfferId($post_id);
+		$sale_offer_id = $this->_getShopOfferId($topic_id);
 		
 		if ($sale_offer_id != -1){ //shop offer already exist
-			$sale_offer_with_items = $this->_getShopOfferWithItems($post_id);
+			$sale_offer_with_items = $this->_getShopOfferWithItems($topic_id);
 	
 			foreach($sale_offer_with_items as $item){	
 				$this->template->assign_var('S_SALE_OFFER_EXIST', true);
@@ -124,14 +124,14 @@ class posting_listener implements EventSubscriberInterface
 	{		
 		//print_r($event);
 		
-		$postId = $event['post_id'];
+		$topic_id = $event['topic_id'];
 		$this->template->assign_var('S_SHOW_SIMPLESHOP_PANEL_BOX', true);
 		
-		$sale_offer_with_items = $this->_getShopOfferWithItems($postId);
+		$sale_offer_with_items = $this->_getShopOfferWithItems($topic_id);
 		$this->template->assign_var('S_SALE_OFFER_EXIST', false);
 
 		$event['S_SALE_OFFER_EXIST'] = false;
-		$saleOfferId = 0;
+		$sale_id = 0;
 		
 		foreach($sale_offer_with_items as $item){	
 			$this->template->assign_var('S_SALE_OFFER_EXIST', true);
@@ -141,7 +141,7 @@ class posting_listener implements EventSubscriberInterface
 				'SALE_OFFER_TITLE'				=> $item[1],
 				'SALE_OFFER_END_DATE'			=> $item[2],
 			));	
-			$saleOfferId = $item[0];
+			$sale_id = $item[0];
 		
 			$this->template->assign_block_vars('SALE_OFFER_ITEMS', array(
 				'item_id' 		=> $item[3],
@@ -149,9 +149,14 @@ class posting_listener implements EventSubscriberInterface
 			));		
 		}
 		
-		$order_an_item_url = $this->helper->route('kaerol_simpleshop_order_an_item_controller', array('post_id' => $postId, 'sale_id' => $saleOfferId, 'hash' => generate_link_hash('add_reaction')));
-		
+		$order_an_item_url = $this->helper->route('kaerol_simpleshop_order_an_item_controller', array('topic_id' => $topic_id, 'sale_id' => $sale_id, 'hash' => generate_link_hash('add_order')));		
 		$this->template->assign_var('AJAX_ORDER_AN_ITEM_URL', $order_an_item_url);
+		
+		$items_report_url = $this->helper->route('kaerol_simpleshop_sale_items_report_controller', array('topic_id' => $topic_id, 'sale_id' => $sale_id, 'hash' => generate_link_hash('items_report')));
+		$this->template->assign_var('AJAX_ITEMS_REPORT_URL', $items_report_url);
+		
+		$person_report_url = $this->helper->route('kaerol_simpleshop_sale_person_report_controller', array('topic_id' => $topic_id, 'sale_id' => $sale_id, 'hash' => generate_link_hash('person_report')));
+		$this->template->assign_var('AJAX_PERSON_REPORT_URL', $person_report_url);
 	}
 	
 	public function submit_post_end($event)
@@ -159,10 +164,10 @@ class posting_listener implements EventSubscriberInterface
 		$mode = $this->request->variable('mode','');
 		if ($mode != 'quote')
 		{
-			$postId = $event['data']['post_id'];
-			$sale_offer_id = $this->_getShopOfferId($postId);
+			$topic_id = $event['data']['topic_id'];
+			$sale_offer_id = $this->_getShopOfferId($topic_id);
 			
-			$sale_offer = $this->request->variable('sale_offer', '');
+			$sale_offer = $this->request->variable('sale_offer', '', true);		
 			$sale_offer_collect_end_date	= $this->request->variable('sale_offer_collect_end_date', '0000-00-00');
 			
 			if ($sale_offer_id != -1){
@@ -177,7 +182,7 @@ class posting_listener implements EventSubscriberInterface
 				$this->db->sql_query($sql);				
 			}else{
 				$sql_sale_offer = array(
-					'POST_ID'				=>	$postId,
+					'TOPIC_ID'				=>	$topic_id,
 					'TITLE'					=>	$sale_offer,
 					'END_DATE'				=>	($sale_offer_collect_end_date) ? $sale_offer_collect_end_date : '0000-00-00',
 				);				
@@ -186,7 +191,7 @@ class posting_listener implements EventSubscriberInterface
 				$sale_offer_id = (int) $this->db->sql_nextid();
 			}
 			
-			$sale_offer_item_text = $this->request->variable('sale_offer_item_text', '');			
+			$sale_offer_item_text = $this->request->variable('sale_offer_item_text', '', true);		
 			$sale_offer_items = explode("\n", str_replace("\r", "", $sale_offer_item_text));
 
 			for($i = 0; $i < count($sale_offer_items); ++$i) {
@@ -200,9 +205,9 @@ class posting_listener implements EventSubscriberInterface
 		}
 	}
 	
-	private function _getShopOfferId($postId)
+	private function _getShopOfferId($topic_id)
 	{		
-		$sql = 'SELECT ID FROM ' . $this->simpleshop_sale_offer . ' WHERE POST_ID = '.$postId;
+		$sql = 'SELECT ID FROM ' . $this->simpleshop_sale_offer . ' WHERE TOPIC_ID = '.$topic_id;
 		$result = $this->db->sql_query($sql);
 		$id = -1;
 
@@ -215,12 +220,12 @@ class posting_listener implements EventSubscriberInterface
 		return $id;
 	}
 	
-	private function _getShopOfferWithItems($postId)
+	private function _getShopOfferWithItems($topic_id)
 	{
 		$sql = 'SELECT so.id as id, so.title as title, so.end_date as end_date, soi.id as item_id, soi.item_name as item_name 
 			FROM ' . $this->simpleshop_sale_offer . ' so 
 			inner join ' . $this->simpleshop_sale_offer_item . ' soi on so.id = soi.sale_offer_id
-			WHERE so.post_id = '.$postId.' order by soi.id';
+			WHERE so.topic_id = '.$topic_id.' order by soi.id';
 
 		$result = $this->db->sql_query($sql);
 		

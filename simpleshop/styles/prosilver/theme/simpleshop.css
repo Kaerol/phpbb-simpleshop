@@ -1,6 +1,44 @@
 .ml-20 {
 	marin-left: 20px;
 }
+.d-none {
+	display: none;
+}
+.simpleshop_report
+{
+	font-size: 14px;
+}
+.simpleshop_report table td
+{
+	padding: 5px;
+}
+.simpleshop_report table th
+{
+	background-color: black;
+	font-size: 16px;
+	padding: 5px 0;
+	color: white;
+	font-weight: bold;
+}
+
+.simpleshop_report_title
+{
+	padding-bottom: 20px;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+#simpleshop_sale_offer_items dl,
+#simpleshop_sale_offer_items dd
+{
+	padding: 0;
+	margin: 0;
+}
+
+.simpleshop_report_content
+{
+	
+}
 @media (max-width: 320px) {
 }
 @media (max-width: 350px) {
