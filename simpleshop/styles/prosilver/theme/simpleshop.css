@@ -1,19 +1,25 @@
 .ml-20 {
 	marin-left: 20px;
 }
+
 .d-none {
 	display: none;
 }
-.simpleshop_report
-{
+
+.simpleshop_report {
 	font-size: 14px;
 }
-.simpleshop_report table td
-{
+
+.simpleshop_report table td {
 	padding: 5px;
 }
-.simpleshop_report table th
-{
+
+.simpleshop_report table.items_report td:nth-child(2),
+.simpleshop_report table.person_report td:nth-child(3) {
+	text-align: center;
+}
+
+.simpleshop_report table th {
 	background-color: black;
 	font-size: 16px;
 	padding: 5px 0;
@@ -21,40 +27,34 @@
 	font-weight: bold;
 }
 
-.simpleshop_report_title
-{
+.simpleshop_report_title {
 	padding-bottom: 20px;
 	font-size: 24px;
 	font-weight: bold;
 }
 
 #simpleshop_sale_offer_items dl,
-#simpleshop_sale_offer_items dd
-{
+#simpleshop_sale_offer_items dd {
 	padding: 0;
 	margin: 0;
 }
 
-.simpleshop_report_content
-{
-	
-}
-@media (max-width: 320px) {
-}
-@media (max-width: 350px) {
-}
-@media (max-width: 430px) {
-}
-@media (max-width: 500px) {
-}
-@media (max-width: 550px) {
-}
-@media (max-width: 700px) {
-}
-@media (min-width: 700px) {
-}
-@media (min-width: 701px) and (max-width: 950px) {	
-}
+.simpleshop_report_content {}
 
-@media (max-width: 430px) {
-}
+@media (max-width: 320px) {}
+
+@media (max-width: 350px) {}
+
+@media (max-width: 430px) {}
+
+@media (max-width: 500px) {}
+
+@media (max-width: 550px) {}
+
+@media (max-width: 700px) {}
+
+@media (min-width: 700px) {}
+
+@media (min-width: 701px) and (max-width: 950px) {}
+
+@media (max-width: 430px) {}
