@@ -1,4 +1,5 @@
 <div class="panel bg3" id="simpleshop-panel">
+	<!-- IF !S_SALE_OFFER_ORDERED -->
 	<div class="inner">
 		<fieldset class="fields2">	
 			<dl>
@@ -18,7 +19,7 @@
 <!-- END SALE_OFFER_ITEMS --> 
 </textarea>
 					<div>
-						<span style="font-color: #ff0000 !important; font-weight: bold;">{L_KAEROL_SIMPLESHOP_WARNING}&nbsp;&nbsp;</span>
+						<span style="color: #ff0000 !important; font-weight: bold;">{L_KAEROL_SIMPLESHOP_WARNING}&nbsp;&nbsp;</span>
 						<br/>
 						{L_KAEROL_SIMPLESHOP_PRODUCTS_DESC_1}
 						{L_KAEROL_SIMPLESHOP_PRODUCTS_DESC_2}<strong>10</strong> {L_KAEROL_SIMPLESHOP_PRODUCTS_DESC_3}
@@ -35,5 +36,17 @@
 				</dd>
 			</dl>
 		</fieldset>
-		</div>
+	</div>
+	<!-- ELSE -->
+	<div class="inner">
+		<input type="hidden" name="sale_offer_exist" id="sale_offer_exist" value="true" >
+		
+		<div style="border: 2px solid #ff0000; background-color: #f59696; padding: 20px 0; border-radius: 7px;">
+			<div style="width: 100%; text-align: center; font-size: 16px; color:#000000;">
+				{L_KAEROL_SIMPLESHOP_SKIPPED_UPDATE_ORDERS_EXIST}
+			</div>		
+		</div>		
+	</div>
+	<!-- ENDIF -->
+
 </div>

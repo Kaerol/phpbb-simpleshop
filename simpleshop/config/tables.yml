@@ -1,4 +1,5 @@
 parameters:
+    tables.core_users: '%core.table_prefix%users'
     tables.simpleshop_config: '%core.table_prefix%simpleshop_config'
     tables.simpleshop_sale_offer: '%core.table_prefix%simpleshop_sale_offer'
     tables.simpleshop_sale_offer_item: '%core.table_prefix%simpleshop_sale_offer_item'

@@ -52,4 +52,5 @@ $lang = array_merge($lang, array(
     'KAEROL_SIMPLESHOP_ORDER_ALL_LABEL'                    => 'Zamówione %s',
     'KAEROL_SIMPLESHOP_ORDER_USER_LABEL'                => '( w tym Twoje %s)',
     'KAEROL_SIMPLESHOP_TOGGLE_ORDER_REPORT'                => 'Schowaj raport/Pokaż zamówienie',
+    'KAEROL_SIMPLESHOP_SKIPPED_UPDATE_ORDERS_EXIST'		=> 'Nie można edytować bo, już jest zamowienie.',
 ));

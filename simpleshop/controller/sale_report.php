@@ -46,7 +46,8 @@ class sale_report implements report_interface
         \phpbb\notification\manager $notification_manager,
         \phpbb\request\request $request,
         \phpbb\user $user,
-        \phpbb\language\language $language
+        \phpbb\language\language $language,
+        $order_statistic
     ) {
         $this->auth = $auth;
         $this->config = $config;
@@ -57,14 +58,14 @@ class sale_report implements report_interface
         $this->user = $user;
         $this->user->add_lang_ext('kaerol/simpleshop', 'simpleshop');
         $this->language = $language;
+        $this->order_statistic = $order_statistic;
 
         $this->offer_item_order = $phpbb_container->getParameter('tables.simpleshop_sale_offer_item_order');
     }
 
     public function items_report($topic_id, $sale_id)
     {
-
-        $report = $this->_getCurrentOrderAllStatistic($sale_id);
+        $report = $this->order_statistic->getCurrentOrderAllReport($sale_id);
 
         $out_title_html = $this->language->lang('KAEROL_SIMPLESHOP_ITEMS_REPORT_TITLE');
         $out_content_html = '<table border="1" width="100%" class="items_report">';
@@ -90,9 +91,9 @@ class sale_report implements report_interface
 
         $json_response = new \phpbb\json_response;
         $data_send = array(
-            'success'             => true,
+            'success'           => true,
             'title'             => $out_title_html,
-            'content'            => $out_content_html,
+            'content'           => $out_content_html,
         );
 
         return $json_response->send($data_send);
@@ -101,7 +102,7 @@ class sale_report implements report_interface
     public function person_report($topic_id, $sale_id)
     {
 
-        $report = $this->_getCurrentOrderPersonStatistic($sale_id);
+        $report = $this->order_statistic->getCurrentOrderPersonReport($sale_id);
 
         $out_title_html = $this->language->lang('KAEROL_SIMPLESHOP_PERSON_REPORT_TITLE');
         $out_content_html = '<table border="1" width="100%" class="person_report">';
@@ -139,44 +140,5 @@ class sale_report implements report_interface
         );
 
         return $json_response->send($data_send);
-    }
-
-    private function _getCurrentOrderAllStatistic($sale_id)
-    {
-
-        $sql = 'SELECT oi.item_name as name, sum(soi1.count) as count 
-				FROM forumsimpleshop_sale_offer_item_order soi1 
-				INNER JOIN forumsimpleshop_sale_offer_item oi on oi.id = soi1.sale_offer_item_id 
-				WHERE soi1.SALE_OFFER_ID = ' . $sale_id . ' GROUP by soi1.sale_offer_item_id';
-
-        $dbResult = $this->db->sql_query($sql);
-        $result = array();
-
-        while ($row = $this->db->sql_fetchrow($dbResult)) {
-            $result[] = ['name' => $row['name'], 'count' => $row['count']];
-        }
-        $this->db->sql_freeresult($dbResult);
-
-        return $result;
-    }
-
-    private function _getCurrentOrderPersonStatistic($sale_id)
-    {
-
-        $sql = 'SELECT u.username, oi.item_name as name, soi1.count as count 
-					FROM forumsimpleshop_sale_offer_item_order soi1 
-					INNER JOIN forumsimpleshop_sale_offer_item oi on oi.id = soi1.sale_offer_item_id 
-					INNER JOIN forumusers u on u.user_id = soi1.user_id 
-					WHERE soi1.SALE_OFFER_ID = ' . $sale_id;
-
-        $dbResult = $this->db->sql_query($sql);
-        $result = array();
-
-        while ($row = $this->db->sql_fetchrow($dbResult)) {
-            $result[] = ['username' => $row['username'], 'name' => $row['name'], 'count' => $row['count']];
-        }
-        $this->db->sql_freeresult($dbResult);
-
-        return $result;
     }
 }

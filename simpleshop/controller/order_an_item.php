@@ -36,7 +36,6 @@ class order_an_item implements add_interface
     /**
      * Constructor
      */
-
     public function __construct(
         Container $phpbb_container,
         \phpbb\auth\auth $auth,

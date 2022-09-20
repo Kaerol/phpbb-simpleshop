@@ -27,6 +27,7 @@ services:
             - '@request'
             - '@user'
             - '@language'
+            - '@kaerol.simpleshop.order_statistic'
 
     kaerol.simpleshop.posting_listener:
         class: kaerol\simpleshop\event\posting_listener
@@ -41,6 +42,14 @@ services:
             - '@request'
             - '@template'
             - '@user'
-            - '@language'
+            - '@kaerol.simpleshop.order_statistic'
         tags:
             - { name: event.listener }		
+            
+    kaerol.simpleshop.order_statistic:
+        class: kaerol\simpleshop\includes\order_statistic
+        arguments:
+            - '@service_container'
+            - '@dbal.conn'
+            - '@user'
+            - '@language'
