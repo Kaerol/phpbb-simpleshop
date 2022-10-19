@@ -1,5 +1,7 @@
 parameters:
     tables.core_users: '%core.table_prefix%users'
+    tables.simpleshop_core_topic: '%core.table_prefix%topics'
+    tables.simpleshop_core_posts: '%core.table_prefix%posts'
     tables.simpleshop_config: '%core.table_prefix%simpleshop_config'
     tables.simpleshop_sale_offer: '%core.table_prefix%simpleshop_sale_offer'
     tables.simpleshop_sale_offer_item: '%core.table_prefix%simpleshop_sale_offer_item'

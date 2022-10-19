@@ -27,6 +27,8 @@
 			let item = {};
 			item['id'] = select.attr("name");
 			item['value'] = select.val();
+			$('#statistic_all_' + item['id']).addClass('d-none');
+			$('#statistic_user_' + item['id']).addClass('d-none');
 			items.push(item);
 		});
 
@@ -43,6 +45,8 @@
 					statistic.forEach((stat) => {
 						$('#statistic_all_' + stat.id).html(stat.count)
 						$('#statistic_user_' + stat.id).html(stat.user_count);
+						$('#statistic_all_' + stat.id).removeClass('d-none');
+						$('#statistic_user_' + stat.id).removeClass('d-none');
 					});
 				}
 			}

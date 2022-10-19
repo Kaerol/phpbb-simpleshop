@@ -64,6 +64,8 @@ class posting_listener implements EventSubscriberInterface
         $this->user->add_lang_ext('kaerol/simpleshop', 'simpleshop');
         $this->order_statistic = $order_statistic;
 
+        $this->simpleshop_core_topic = $phpbb_container->getParameter('tables.simpleshop_core_topic');
+        $this->simpleshop_core_posts = $phpbb_container->getParameter('tables.simpleshop_core_posts');
         $this->simpleshop_config = $phpbb_container->getParameter('tables.simpleshop_config');
         $this->simpleshop_sale_offer = $phpbb_container->getParameter('tables.simpleshop_sale_offer');
         $this->simpleshop_sale_offer_item = $phpbb_container->getParameter('tables.simpleshop_sale_offer_item');
@@ -103,16 +105,32 @@ class posting_listener implements EventSubscriberInterface
         $template_data['S_SHOW_SIMPLESHOP_PANEL_BOX'] = true;
         $event['page_data'] = $template_data;
 
+        $is_my_offer_id = $this->_isMyShopOffer($this->user_id, $topic_id);
+
+        $this->template->assign_var('S_IS_LOCKED_ADDED_OR_EDIT', false);
+        if (!$is_my_offer_id) {
+            $this->template->assign_var('S_IS_LOCKED_ADDED_OR_EDIT', true);
+        } else {
+            $postData = $this->_getTopicPost($topic_id);
+
+            if ($postData['count'] > 1) {
+                $this->template->assign_var('S_IS_LOCKED_ADDED_OR_EDIT', true);
+            }
+            if ($topic_id == 0) {
+                $this->template->assign_var('S_IS_LOCKED_ADDED_OR_EDIT', false);
+            }
+        }
+
         $sale_offer_id = $this->_getShopOfferId($topic_id);
-        $offerExist = false;
-        $offerOrdered = false;
+        $offer_exist = false;
+        $offer_ordered = false;
 
         if ($sale_offer_id != -1) {
             //shop offer already exist
             $sale_offer_with_items = $this->_getShopOfferWithItems($topic_id);
 
             foreach ($sale_offer_with_items as $item) {
-                $offerExist = true;
+                $offer_exist = true;
 
                 $this->template->assign_vars(array(
                     'SALE_OFFER_TITLE'                => $item[1],
@@ -123,11 +141,11 @@ class posting_listener implements EventSubscriberInterface
                     'item_id'         => $item[3],
                     'item_name'     => $item[4],
                 ));
-                $offerOrdered = $offerOrdered || ($item[5] > 0);
+                $offer_ordered = $offer_ordered || ($item[5] > 0);
             }
         }
-        $this->template->assign_var('S_SALE_OFFER_EXIST', $offerExist);
-        $this->template->assign_var('S_SALE_OFFER_ORDERED', $offerOrdered);
+        $this->template->assign_var('S_SALE_OFFER_EXIST', $offer_exist);
+        $this->template->assign_var('S_SALE_OFFER_ORDERED', $offer_ordered);
     }
 
     public function viewtopic_assign_template_vars_before($event)
@@ -142,6 +160,7 @@ class posting_listener implements EventSubscriberInterface
         $sale_id = $this->_getShopOfferId($topic_id);
 
         $statisticLabels = $this->order_statistic->getStatisticWithLabels($sale_id, $this->user_id);
+        $sale_offer_end_date = null;
 
         foreach ($sale_offer_with_items as $item) {
             $this->template->assign_var('S_SALE_OFFER_EXIST', true);
@@ -151,24 +170,33 @@ class posting_listener implements EventSubscriberInterface
                 'SALE_OFFER_TITLE'                => $item[1],
                 'SALE_OFFER_END_DATE'            => $item[2],
             ));
+            $sale_offer_end_date = $item[2];
 
+            $all_count = '';
+            $user_count = '';
             $all_count_label = '';
             $user_count_label = '';
             foreach ($statisticLabels as $statistic) {
                 if ($item[3] == $statistic['id']) {
-                    $all_count_label = $statistic['count'];
-                    $user_count_label = $statistic['user_count'];
+                    $all_count = $statistic['count'];
+                    $user_count = $statistic['user_count'];
+                    $all_count_label = $statistic['all_count_label'];
+                    $user_count_label = $statistic['user_count_label'];
                     break;
                 }
             }
 
             $this->template->assign_block_vars('SALE_OFFER_ITEMS', array(
-                'item_id'            => $item[3],
-                'item_name'          => $item[4],
+                'item_id'           => $item[3],
+                'item_name'         => $item[4],
+                'all_count'         => $all_count,
+                'user_count'        => $user_count,
                 'all_count_label'   => $all_count_label,
-                'user_count_label'   => $user_count_label,
+                'user_count_label'  => $user_count_label,
             ));
         }
+
+        $this->template->assign_var('S_SALE_OFFER_OPENED', $this->_isFuture($sale_offer_end_date));
 
         $order_an_item_url = $this->helper->route('kaerol_simpleshop_order_an_item_controller', array('topic_id' => $topic_id, 'sale_id' => $sale_id, 'hash' => generate_link_hash('add_order')));
 
@@ -184,56 +212,65 @@ class posting_listener implements EventSubscriberInterface
     public function submit_post_end($event)
     {
         $mode = $this->request->variable('mode', '');
+        $topic_id = $event['data']['topic_id'];
+        $post_id = $event['data']['post_id'];
+
+        $postData = $this->_getTopicPost($topic_id);
+
         if ($mode != 'quote') {
-            $topic_id = $event['data']['topic_id'];
-            $sale_offer_id = $this->_getShopOfferId($topic_id);
+            if ($postData['count'] <= 1) {
 
-            $sale_offer = $this->request->variable('sale_offer', '', true);
-            $sale_offer_exist = $this->request->variable('sale_offer_exist', '');
+                $sale_offer_id = $this->_getShopOfferId($topic_id);
 
-            if ($sale_offer_exist || $sale_offer_exist === 'true') {
-                //SKIPPED UPDATE OF EXISTING ORDERS
-            } else {
-                $sale_offer_collect_end_date     = $this->request->variable('sale_offer_collect_end_date', '0000-00-00');
+                $sale_offer = $this->request->variable('sale_offer', '', true);
+                $sale_offer_exist = $this->request->variable('sale_offer_exist', '');
 
-                if ($sale_offer_id != -1) {
-                    $sql_sale_offer = array(
-                        'TITLE'                   =>    $sale_offer,
-                        'END_DATE'                => ($sale_offer_collect_end_date) ? $sale_offer_collect_end_date : '0000-00-00',
-                    );
-
-                    $sql = 'UPDATE ' . $this->simpleshop_sale_offer . ' SET ' . $this->db->sql_build_array('UPDATE', $sql_sale_offer) . ' WHERE id = ' . $sale_offer_id;
-                    $this->db->sql_query($sql);
-
-                    $sql = 'DELETE FROM ' . $this->simpleshop_sale_offer_item . ' WHERE sale_offer_id = ' . $sale_offer_id;
-                    $this->db->sql_query($sql);
+                if ($sale_offer_exist || $sale_offer_exist === 'true') {
+                    //SKIPPED UPDATE OF EXISTING ORDERS
                 } else {
-                    $sql_sale_offer = array(
-                        'TOPIC_ID'                =>    $topic_id,
-                        'TITLE'                   =>    $sale_offer,
-                        'END_DATE'                => ($sale_offer_collect_end_date) ? $sale_offer_collect_end_date : '0000-00-00',
-                    );
+                    if ($postData['postId'] <= $post_id) {
+                        $sale_offer_collect_end_date     = $this->request->variable('sale_offer_collect_end_date', '0000-00-00');
 
-                    $sql = 'INSERT INTO ' . $this->simpleshop_sale_offer . ' ' . $this->db->sql_build_array('INSERT', $sql_sale_offer);
-                    $this->db->sql_query($sql);
-                    $sale_offer_id = (int) $this->db->sql_nextid();
-                }
+                        if ($sale_offer_id != -1) {
+                            $sql_sale_offer = array(
+                                'TITLE'                   =>    $sale_offer,
+                                'END_DATE'                => ($sale_offer_collect_end_date) ? $sale_offer_collect_end_date : '0000-00-00',
+                            );
 
-                $sale_offer_item_text = $this->request->variable('sale_offer_item_text', '', true);
-                $sale_offer_items = explode("\n", $sale_offer_item_text); // explode('\n', str_replace('\r', '', $sale_offer_item_text));
+                            $sql = 'UPDATE ' . $this->simpleshop_sale_offer . ' SET ' . $this->db->sql_build_array('UPDATE', $sql_sale_offer) . ' WHERE id = ' . $sale_offer_id;
+                            $this->db->sql_query($sql);
 
-                for (
-                    $i = 0;
-                    $i < count($sale_offer_items);
-                    ++$i
-                ) {
-                    $sql_sale_offer_items = array(
-                        'SALE_OFFER_ID'                =>    $sale_offer_id,
-                        'ITEM_NAME'                    =>    $sale_offer_items[$i],
-                    );
+                            $sql = 'DELETE FROM ' . $this->simpleshop_sale_offer_item . ' WHERE sale_offer_id = ' . $sale_offer_id;
+                            $this->db->sql_query($sql);
+                        } else {
+                            $sql_sale_offer = array(
+                                'TOPIC_ID'                =>    $topic_id,
+                                'TITLE'                   =>    $sale_offer,
+                                'END_DATE'                => ($sale_offer_collect_end_date) ? $sale_offer_collect_end_date : '0000-00-00',
+                            );
 
-                    $sql = 'INSERT INTO ' . $this->simpleshop_sale_offer_item . ' ' . $this->db->sql_build_array('INSERT', $sql_sale_offer_items);
-                    $result = $this->db->sql_query($sql);
+                            $sql = 'INSERT INTO ' . $this->simpleshop_sale_offer . ' ' . $this->db->sql_build_array('INSERT', $sql_sale_offer);
+                            $this->db->sql_query($sql);
+                            $sale_offer_id = (int) $this->db->sql_nextid();
+                        }
+
+                        $sale_offer_item_text = $this->request->variable('sale_offer_item_text', '', true);
+                        $sale_offer_items = explode("\n", $sale_offer_item_text); // explode('\n', str_replace('\r', '', $sale_offer_item_text));
+
+                        for (
+                            $i = 0;
+                            $i < count($sale_offer_items);
+                            ++$i
+                        ) {
+                            $sql_sale_offer_items = array(
+                                'SALE_OFFER_ID'                =>    $sale_offer_id,
+                                'ITEM_NAME'                    =>    $sale_offer_items[$i],
+                            );
+
+                            $sql = 'INSERT INTO ' . $this->simpleshop_sale_offer_item . ' ' . $this->db->sql_build_array('INSERT', $sql_sale_offer_items);
+                            $result = $this->db->sql_query($sql);
+                        }
+                    }
                 }
             }
         }
@@ -257,11 +294,13 @@ class posting_listener implements EventSubscriberInterface
 
     private function _getShopOfferWithItems($topic_id)
     {
-        $sql = 'SELECT so.id as id, so.title as title, so.end_date as end_date, soi.id as item_id, soi.item_name as item_name, soio.count as count
+        $sql = 'SELECT so.id as id, so.title as title, so.end_date as end_date, soi.id as item_id, soi.item_name as item_name, count(soio.count) as count
 			FROM ' . $this->simpleshop_sale_offer . ' so 
 			inner join ' . $this->simpleshop_sale_offer_item . ' soi on so.id = soi.sale_offer_id
 			left outer join ' . $this->simpleshop_sale_offer_item_order . ' soio on soi.id = soio.sale_offer_item_id
-			WHERE so.topic_id = ' . $topic_id . ' order by soi.id';
+			WHERE so.topic_id = ' . $topic_id . '
+            GROUP by so.id, so.title, so.end_date, soi.id, soi.item_name
+            order by so.id';
 
         $result = $this->db->sql_query($sql);
 
@@ -281,5 +320,50 @@ class posting_listener implements EventSubscriberInterface
         $this->db->sql_freeresult($result);
 
         return $response;
+    }
+
+    private function _isMyShopOffer($user_id, $topic_id)
+    {
+        $sql = 'SELECT * FROM ' . $this->simpleshop_sale_offer . ' so inner JOIN ' . $this->simpleshop_core_topic . ' ft ON ft.topic_id = so.topic_id where ft.topic_poster = ' . $user_id . ' and ' . $topic_id;
+
+        $result = $this->db->sql_query($sql);
+
+        if ($result->num_rows != 0) {
+            $row = $this->db->sql_fetchrow($result);
+            return true;
+        }
+        $this->db->sql_freeresult($result);
+
+        return false;
+    }
+
+
+    private function _getTopicPost($topic_id)
+    {
+        $sql = 'SELECT fp.post_id, count(fp.post_id) as count FROM ' . $this->simpleshop_sale_offer . ' so inner JOIN ' . $this->simpleshop_core_topic . ' ft ON ft.topic_id = so.topic_id 
+        inner JOIN ' . $this->simpleshop_core_posts . ' fp ON fp.topic_id = ft.topic_id where ft.topic_id = ' . $topic_id;
+
+        $result = $this->db->sql_query($sql);
+        $postId = -1;
+        $count = -1;
+
+        if ($result->num_rows != 0) {
+            $row = $this->db->sql_fetchrow($result);
+            $postId = $row['post_id'];
+            $count = $row['count'];
+        }
+        $this->db->sql_freeresult($result);
+
+        return [
+            'postId' => $postId,
+            'count' => $count
+        ];
+    }
+
+    private function _isFuture($future_date)
+    {
+        $today = date("Y-m-d H:i:s");
+
+        return ($future_date > $today);
     }
 }

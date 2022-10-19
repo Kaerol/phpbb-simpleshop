@@ -39,8 +39,8 @@ class order_statistic
             $count = $item['count'];
             $user_count = $item['user_count'];
             
-            $item['count'] = $this->language->lang('KAEROL_SIMPLESHOP_ORDER_ALL_LABEL', $count);
-            $item['user_count'] = $this->language->lang('KAEROL_SIMPLESHOP_ORDER_USER_LABEL', $user_count);
+            $item['all_count_label'] = $this->language->lang('KAEROL_SIMPLESHOP_ORDER_ALL_LABEL', $count);
+            $item['user_count_label'] = $this->language->lang('KAEROL_SIMPLESHOP_ORDER_USER_LABEL', $user_count);
         }
         
         return $statistic;
