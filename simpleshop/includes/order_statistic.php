@@ -34,15 +34,15 @@ class order_statistic
         $allStatistic = $this->_getCurrentOrderAllStatistic($sale_id);
         $userStatistic = $this->_getCurrentOrderUserStatistic($sale_id, $user_id);
         $statistic = $this->_calculateStatistic($allStatistic, $userStatistic);
-        
+
         foreach ($statistic as &$item) {
             $count = $item['count'];
             $user_count = $item['user_count'];
-            
+
             $item['all_count_label'] = $this->language->lang('KAEROL_SIMPLESHOP_ORDER_ALL_LABEL', $count);
             $item['user_count_label'] = $this->language->lang('KAEROL_SIMPLESHOP_ORDER_USER_LABEL', $user_count);
         }
-        
+
         return $statistic;
     }
 
@@ -51,7 +51,7 @@ class order_statistic
         $sql = 'SELECT oi.item_name as name, sum(soi1.count) as count 
 				FROM forumsimpleshop_sale_offer_item_order soi1 
 				INNER JOIN forumsimpleshop_sale_offer_item oi on oi.id = soi1.sale_offer_item_id 
-				WHERE soi1.SALE_OFFER_ID = ' . $sale_id . ' GROUP by soi1.sale_offer_item_id';
+				WHERE soi1.SALE_OFFER_ID = ' . $sale_id . ' GROUP by soi1.sale_offer_item_id order by oi.id';
 
         $dbResult = $this->db->sql_query($sql);
         $result = array();
@@ -70,7 +70,7 @@ class order_statistic
 					FROM ' . $this->offer_item_order . ' soi1 
 					INNER JOIN ' . $this->offer_item . ' oi on oi.id = soi1.sale_offer_item_id 
 					INNER JOIN ' . $this->core_users . ' u on u.user_id = soi1.user_id 
-					WHERE soi1.SALE_OFFER_ID = ' . $sale_id;
+					WHERE soi1.SALE_OFFER_ID = ' . $sale_id . ' order by u.username';
 
         $dbResult = $this->db->sql_query($sql);
         $result = array();

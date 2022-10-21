@@ -19,6 +19,22 @@
 	text-align: center;
 }
 
+.simpleshop_report table.items_report tfoot td:nth-child(1),
+.simpleshop_report table.person_report tfoot td:nth-child(1) {
+	text-align: right;
+	background-color: black;
+	color: white;
+	font-weight: bold;
+}
+
+.simpleshop_report table.items_report tfoot td:nth-child(2),
+.simpleshop_report table.person_report tfoot td:nth-child(2) {
+	text-align: center;
+	background-color: black;
+	color: white;
+	font-weight: bold;
+}
+
 .simpleshop_report table th {
 	background-color: black;
 	font-size: 16px;

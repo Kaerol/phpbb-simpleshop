@@ -1,30 +1,34 @@
-<!-- IF S_IS_LOCKED_ADDED_OR_EDIT -->
+<!-- IF S_SHOW_SIMPLESHOP_PANEL_BOX -->
+<!-- IF !S_IS_LOCKED_ADDED_OR_EDIT -->
 <div class="panel bg3" id="simpleshop-panel">
 	<!-- IF !S_SALE_OFFER_ORDERED -->
 	<div class="inner">
-		<fieldset class="fields2">	
+		<fieldset class="fields2">
 			<dl>
 				<dt>
 					<label for="sale_offer">{L_KAEROL_SIMPLESHOP_TITLE}:</label>
 				</dt>
-				<dd>					
-					<input type="text" name="sale_offer" id="sale_offer" maxlength="100" value="{SALE_OFFER_TITLE}" class="inputbox">
+				<dd>
+					<input type="text" name="sale_offer" id="sale_offer" maxlength="100" value="{SALE_OFFER_TITLE}"
+						class="inputbox">
 				</dd>
 				<dt>
 					<label for="sale_offer_item_text">{L_KAEROL_SIMPLESHOP_PRODUCTS}:</label>
 				</dt>
 				<dd>
-<textarea name="sale_offer_item_text" id="sale_offer_item_text" rows="10" cols="35" class="inputbox">
+					<textarea name="sale_offer_item_text" id="sale_offer_item_text" rows="10" cols="35"
+						class="inputbox">
 <!-- BEGIN SALE_OFFER_ITEMS -->
 {SALE_OFFER_ITEMS.item_name}
 <!-- END SALE_OFFER_ITEMS --> 
 </textarea>
 					<div>
-						<span style="color: #ff0000 !important; font-weight: bold;">{L_KAEROL_SIMPLESHOP_WARNING}&nbsp;&nbsp;</span>
-						<br/>
+						<span
+							style="color: #ff0000 !important; font-weight: bold;">{L_KAEROL_SIMPLESHOP_WARNING}&nbsp;&nbsp;</span>
+						<br />
 						{L_KAEROL_SIMPLESHOP_PRODUCTS_DESC_1}
-						<br/>
-						<br/>
+						<br />
+						<br />
 					</div>
 				</dd>
 				<dt>
@@ -32,22 +36,23 @@
 				</dt>
 				<dd>
 					<input type="date" name="sale_offer_collect_end_date" value="{SALE_OFFER_END_DATE}">
-					{L_KAEROL_SIMPLESHOP_ORDERS_COLLECT_END_DATE_INFO} 
+					{L_KAEROL_SIMPLESHOP_ORDERS_COLLECT_END_DATE_INFO}
 				</dd>
 			</dl>
 		</fieldset>
 	</div>
 	<!-- ELSE -->
 	<div class="inner">
-		<input type="hidden" name="sale_offer_exist" id="sale_offer_exist" value="true" >
-		
+		<input type="hidden" name="sale_offer_exist" id="sale_offer_exist" value="true">
+
 		<div style="border: 2px solid #ff0000; background-color: #f59696; padding: 20px 0; border-radius: 7px;">
 			<div style="width: 100%; text-align: center; font-size: 16px; color:#000000;">
 				{L_KAEROL_SIMPLESHOP_SKIPPED_UPDATE_ORDERS_EXIST}
-			</div>		
-		</div>		
+			</div>
+		</div>
 	</div>
 	<!-- ENDIF -->
-	
+
 </div>
+<!-- ENDIF -->
 <!-- ENDIF -->

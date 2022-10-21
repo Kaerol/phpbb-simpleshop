@@ -76,6 +76,7 @@ class sale_report implements report_interface
         $out_content_html .= $this->language->lang('KAEROL_SIMPLESHOP_REPORT_COUNT_HEADER');
         $out_content_html .= '</th>';
         $out_content_html .= '</th></tr>';
+        $sum = 0;
 
         foreach ($report as $row) {
 
@@ -86,7 +87,13 @@ class sale_report implements report_interface
             $out_content_html .= $row['count'];
             $out_content_html .= '</td>';
             $out_content_html .= '</td></tr>';
+            $sum += (int) $row['count'];
         }
+        $out_content_html .= '<tfoot><tr><td>' . $this->language->lang('KAEROL_SIMPLESHOP_REPORT_SUMMARY') . '</td>';
+        $out_content_html .= '<td>';
+        $out_content_html .= $sum;
+        $out_content_html .= '</td></tr></tfoot>';
+
         $out_content_html .= '</table>';
 
         $json_response = new \phpbb\json_response;
@@ -116,6 +123,7 @@ class sale_report implements report_interface
         $out_content_html .= $this->language->lang('KAEROL_SIMPLESHOP_REPORT_COUNT_HEADER');
         $out_content_html .= '</th>';
         $out_content_html .= '</th></tr>';
+        $sum = 0;
 
         foreach ($report as $row) {
 
@@ -129,7 +137,13 @@ class sale_report implements report_interface
             $out_content_html .= $row['count'];
             $out_content_html .= '</td>';
             $out_content_html .= '</td></tr>';
+            $sum += (int) $row['count'];
         }
+        $out_content_html .= '<tfoot><tr><td colspan="2">' . $this->language->lang('KAEROL_SIMPLESHOP_REPORT_SUMMARY') . '</td>';
+        $out_content_html .= '<td>';
+        $out_content_html .= $sum;
+        $out_content_html .= '</td></tr></tfoot>';
+
         $out_content_html .= '</table>';
 
         $json_response = new \phpbb\json_response;
