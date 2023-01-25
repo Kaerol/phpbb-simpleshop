@@ -1,0 +1,12 @@
+<!-- IF S_SALE_OFFER_EXIST -->
+    <div style="width: 100%">
+        <div style="border: 2px solid #ff0000; background-color: #f59696; padding: 0; border-radius: 7px; text-align: left;">
+            <!-- IF S_SALE_OFFER_OPENED -->
+                <p style="margin: 10px 10px">{L_KAEROL_SIMPLESHOP_ORDERS_COLLECT_BUTTON_INFO}
+                <p style="margin: 10px 10px">{L_KAEROL_SIMPLESHOP_ORDERS_COLLECT_END_DATE_DESC_1} <strong>{SALE_OFFER_END_DATE}</strong>      
+            <!-- ELSE -->
+                <p style="margin: 10px 10px">{L_KAEROL_SIMPLESHOP_ORDERS_COLLECT_ENDED} <strong>{SALE_OFFER_END_DATE}</strong>                
+            <!-- ENDIF -->
+        </div>
+    </div>
+<!-- ENDIF -->

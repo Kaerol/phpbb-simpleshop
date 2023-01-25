@@ -3,77 +3,97 @@
 <div class="panel">
 	<div class="inner">
 		<div class="content" style="margin: 0 20px">
-			
+
 			<!-- IF S_SALE_OFFER_OPENED -->
-				<h2>{SALE_OFFER_TITLE}</h2>
-				<br />
-				<span style="color: #ff0000 !important; font-weight: bold;">{L_KAEROL_SIMPLESHOP_WARNING}&nbsp;&nbsp;</span>
-				<br />
-				<p style="margin-left: 10px">{L_KAEROL_SIMPLESHOP_ORDERS_COLLECT_END_DATE_DESC_1}
-					<strong>{SALE_OFFER_END_DATE}</strong> {L_KAEROL_SIMPLESHOP_ORDERS_COLLECT_END_DATE_DESC_2}
-				</p>
-				<hr />
+			<h2>{SALE_OFFER_TITLE}</h2>
+			<br />
+			<span style="color: #ff0000 !important; font-weight: bold;">{L_KAEROL_SIMPLESHOP_WARNING}&nbsp;&nbsp;</span>
+			<br />
+			<p style="margin-left: 10px">{L_KAEROL_SIMPLESHOP_ORDERS_COLLECT_END_DATE_DESC_1}
+				<strong>{SALE_OFFER_END_DATE}</strong> {L_KAEROL_SIMPLESHOP_ORDERS_COLLECT_END_DATE_DESC_2}
+			</p>
+			<hr />
 
-				<div id="simpleshop_sale_panel">
-					<form method="post" action="{AJAX_ORDER_AN_ITEM_URL}">
-						<input id="simpleshop_user_id" type="hidden" value="{USER_ID}">
+			<div id="simpleshop_sale_panel">
+				<form method="post" action="{AJAX_ORDER_AN_ITEM_URL}">
+					<input id="simpleshop_user_id" type="hidden" value="{USER_ID}">
 
-						<fieldset id="simpleshop_sale_offer_items" class="">
-							<ol>
-								<!-- BEGIN SALE_OFFER_ITEMS -->
-								<li>
-									<dl>
-										<dt>{SALE_OFFER_ITEMS.item_name}</dt>
-										<dd>
-											<select class="simpleshop_item" name="{SALE_OFFER_ITEMS.item_id}" value="{SALE_OFFER_ITEMS.user_count}">
-												<option value="0" <!-- IF SALE_OFFER_ITEMS.user_count === '0' --> selected <!-- ENDIF --> >0</option>
-												<option value="1" <!-- IF SALE_OFFER_ITEMS.user_count === '1' --> selected <!-- ENDIF --> >1</option>
-												<option value="2" <!-- IF SALE_OFFER_ITEMS.user_count === '2' --> selected <!-- ENDIF --> >2</option>
-												<option value="3" <!-- IF SALE_OFFER_ITEMS.user_count === '3' --> selected <!-- ENDIF --> >3</option>
-												<option value="4" <!-- IF SALE_OFFER_ITEMS.user_count === '4' --> selected <!-- ENDIF --> >4</option>
-												<option value="5" <!-- IF SALE_OFFER_ITEMS.user_count === '5' --> selected <!-- ENDIF --> >5</option>
-												<option value="6" <!-- IF SALE_OFFER_ITEMS.user_count === '6' --> selected <!-- ENDIF --> >6</option>
-												<option value="7" <!-- IF SALE_OFFER_ITEMS.user_count === '7' --> selected <!-- ENDIF --> >7</option>
-												<option value="8" <!-- IF SALE_OFFER_ITEMS.user_count === '8' --> selected <!-- ENDIF --> >8</option>
-												<option value="9" <!-- IF SALE_OFFER_ITEMS.user_count === '9' --> selected <!-- ENDIF --> >9</option>
-											</select>
-											<span id="statistic_all_{SALE_OFFER_ITEMS.item_id}">{SALE_OFFER_ITEMS.all_count_label}</span>
-											<span id="statistic_user_{SALE_OFFER_ITEMS.item_id}">{SALE_OFFER_ITEMS.user_count_label}</span>
-											</dt>
-									</dl>
-									<hr />
-								</li>
-								<!-- END SALE_OFFER_ITEMS -->
-							</ol>
-						</fieldset>
-						<fieldset class="submit-buttons">
-							<input type="button" id="simpleshop_order_button" value="{L_KAEROL_SIMPLESHOP_ORDER}">
-						</fieldset>
-					</form>
+					<fieldset id="simpleshop_sale_offer_items" class="">
+						<ol>
+							<!-- BEGIN SALE_OFFER_ITEMS -->
+							<li>
+								<dl>
+									<dt>{SALE_OFFER_ITEMS.item_name}</dt>
+									<dd>
+										<select class="simpleshop_item" name="{SALE_OFFER_ITEMS.item_id}"
+											value="{SALE_OFFER_ITEMS.user_count}">
+											<option value="0" <!-- IF SALE_OFFER_ITEMS.user_count==='0' --> selected
+												<!-- ENDIF --> >0</option>
+											<option value="1" <!-- IF SALE_OFFER_ITEMS.user_count==='1' --> selected
+												<!-- ENDIF --> >1</option>
+											<option value="2" <!-- IF SALE_OFFER_ITEMS.user_count==='2' --> selected
+												<!-- ENDIF --> >2</option>
+											<option value="3" <!-- IF SALE_OFFER_ITEMS.user_count==='3' --> selected
+												<!-- ENDIF --> >3</option>
+											<option value="4" <!-- IF SALE_OFFER_ITEMS.user_count==='4' --> selected
+												<!-- ENDIF --> >4</option>
+											<option value="5" <!-- IF SALE_OFFER_ITEMS.user_count==='5' --> selected
+												<!-- ENDIF --> >5</option>
+											<option value="6" <!-- IF SALE_OFFER_ITEMS.user_count==='6' --> selected
+												<!-- ENDIF --> >6</option>
+											<option value="7" <!-- IF SALE_OFFER_ITEMS.user_count==='7' --> selected
+												<!-- ENDIF --> >7</option>
+											<option value="8" <!-- IF SALE_OFFER_ITEMS.user_count==='8' --> selected
+												<!-- ENDIF --> >8</option>
+											<option value="9" <!-- IF SALE_OFFER_ITEMS.user_count==='9' --> selected
+												<!-- ENDIF --> >9</option>
+										</select>
+										<span
+											id="statistic_all_{SALE_OFFER_ITEMS.item_id}">{SALE_OFFER_ITEMS.all_count_label}</span>
+										<span
+											id="statistic_user_{SALE_OFFER_ITEMS.item_id}">{SALE_OFFER_ITEMS.user_count_label}</span>
+										</dt>
+								</dl>
+								<hr />
+							</li>
+							<!-- END SALE_OFFER_ITEMS -->
+						</ol>
+					</fieldset>
+					<fieldset class="submit-buttons">
+						<input type="button" id="simpleshop_order_button" value="{L_KAEROL_SIMPLESHOP_ORDER}">
+					</fieldset>
+				</form>
 
-					<div class="content">
-						<span
-							style="color: #0000ff !important; font-weight: bold;">{L_KAEROL_SIMPLESHOP_INFO}&nbsp;&nbsp;</span>
-						<br />
-						<br />
-						<p style="margin-left: 10px">{L_KAEROL_SIMPLESHOP_PRODUCTS_UPDATE}</p>
-						<p style="margin-left: 10px">{L_KAEROL_SIMPLESHOP_PRODUCTS_DELETE}</p>
-					</div>
+				<div class="content">
+					<span
+						style="color: #0000ff !important; font-weight: bold;">{L_KAEROL_SIMPLESHOP_INFO}&nbsp;&nbsp;</span>
+					<br />
+					<br />
+					<p style="margin-left: 10px">{L_KAEROL_SIMPLESHOP_PRODUCTS_UPDATE}</p>
+					<p style="margin-left: 10px">{L_KAEROL_SIMPLESHOP_PRODUCTS_DELETE}</p>
 				</div>
+			</div>
 			<!-- ELSE -->
-				<br />
-				<p style="margin-left: 10px">{L_KAEROL_SIMPLESHOP_ORDERS_COLLECT_ENDED} <strong>{SALE_OFFER_END_DATE}</strong>
-				</p>
-				<hr />
+			<br />
+
+			<div style="width: 100%">
+				<div
+					style="border: 2px solid #ff0000; background-color: #f59696; padding: 10px 0 0 0; border-radius: 7px; text-align: left;">
+					<p style="margin-left: 10px">{L_KAEROL_SIMPLESHOP_ORDERS_COLLECT_ENDED}
+						<strong>{SALE_OFFER_END_DATE}</strong>
+					</p>
+				</div>
+			</div>
+			<hr />
 			<!-- ENDIF -->
 
 			<div id="simpleshop_report_panel" class="d-none">
 				<!-- IF S_SALE_OFFER_OPENED -->
-					<fieldset class="submit-buttons">
-						<input type="button" id="simpleshop_toggle_order_report"
-							value="{L_KAEROL_SIMPLESHOP_TOGGLE_ORDER_REPORT}">
-						<br />
-					</fieldset>
+				<fieldset class="submit-buttons">
+					<input type="button" id="simpleshop_toggle_order_report"
+						value="{L_KAEROL_SIMPLESHOP_TOGGLE_ORDER_REPORT}">
+					<br />
+				</fieldset>
 				<!-- ENDIF -->
 
 				<div class="simpleshop_report">

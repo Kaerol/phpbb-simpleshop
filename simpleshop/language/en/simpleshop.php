@@ -40,6 +40,7 @@ $lang = array_merge( $lang, array(
     'KAEROL_SIMPLESHOP_ORDERS_COLLECT_END_DATE_INFO'	=> 'Termin składania zamówień',
     'KAEROL_SIMPLESHOP_ORDERS_COLLECT_END_DATE_DESC_1'	=> 'Zamówienia należy składać w nieprekraczalnym terminie do dnia',
     'KAEROL_SIMPLESHOP_ORDERS_COLLECT_END_DATE_DESC_2'	=> 'włącznie.',
+    'KAEROL_SIMPLESHOP_ORDERS_COLLECT_BUTTON_INFO'      => 'Aby złożyć zamówienie skorzystaj z formularza na samej górze postu.',
     'KAEROL_SIMPLESHOP_ORDER'							=> 'WYŚLIJ ZAMÓWIENIE',
     'KAEROL_SIMPLESHOP_INFO'							=> 'INFORMACJA!',
     'KAEROL_SIMPLESHOP_WARNING'							=> 'UWAGA!',
@@ -54,5 +55,5 @@ $lang = array_merge( $lang, array(
     'KAEROL_SIMPLESHOP_ORDER_USER_LABEL'				=> '(w tym Twoje %s)',
     'KAEROL_SIMPLESHOP_TOGGLE_ORDER_REPORT'				=> 'Schowaj raport/Pokaż zamówienie',
     'KAEROL_SIMPLESHOP_SKIPPED_UPDATE_ORDERS_EXIST'		=> 'Nie można edytować bo, już jest zamowienie.',
-    'KAEROL_SIMPLESHOP_ORDERS_COLLECT_ENDED'		=> 'Zbieranie zamówień zostało zakończone z dniem',
+    'KAEROL_SIMPLESHOP_ORDERS_COLLECT_ENDED'		    => 'Zbieranie zamówień zostało zakończone z dniem',
 ) );
